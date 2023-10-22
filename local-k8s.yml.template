@@ -1,0 +1,24 @@
+#cloud-config
+
+# packages to install (via snap)
+snap:
+  commands:
+    - [install, docker]
+    - [install, microk8s, --classic]
+
+# create the docker group
+groups:
+  - docker
+
+# Setup default ubuntu user & enable SSH access
+users:
+  - name: ubuntu
+    groups: sudo, docker
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh-authorized-keys:
+      - <your public ssh key>
+
+# make sure firewall is not a problem
+runcmd:
+  - sudo iptables -P FORWARD ACCEPT
